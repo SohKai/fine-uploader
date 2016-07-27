@@ -10,33 +10,31 @@
 Please see [the blog post on Fine Uploader S3][s3blog].
 
 
-### Uploading to S3 With Transfer Acceleration
-Amazon's [S3 Transfer Acceleration option][s3transferacceleration] is by far the easiest way to have your
-uploads to S3 go through a CDN (Amazon Cloudfront). To start using this feature, simply enable it in your AWS
-console and use `https://[bucket-name].s3-accelerate.amazonaws.com` instead of `https://[bucket-name].s3.amazonaws.com`
-in the [`request.endpoint` option][requestendpoint].
-
-
-### Uploading to S3 Through a CDN Without Transfer Acceleration
-Support for uploads to an S3 bucket via a CDN was added in Fine Uploader 5.1.0.  You can upload files to
+### Uploading to S3 Through a CDN
+Support for uploads to an S3 bucket via a CDN was added in Fine Uploader 5.1.0. You can upload files to
 any S3 bucket through any CDN, provided the CDN forwards all headers and does not append any additional
 headers to the request that is sent on to S3. An example of a CDN that should work fine is [fastly][fastly].
-Ironically, an example of a CDN that does not appear to work is Amazon Cloudfront (see [issue #1016 in the
-Fine Uploader GitHub issue tracker][issue1016]). If you'd like to use Amazon Cloudfront as a CDN for your
-uploads, please use the [S3 Transfer Acceleration option][s3transferacceleration] instead.
 
-#### Overview
-When uploading to S3 via a CDN, you must specify the name of the bucket.  This is not required for uploads
-directly to S3, since Fine Uploader is able to determine the bucket name by examining the S3 endpoint URL.
-This is obviously not the case for a CDN endpoint.  So, in addition to specifying the CDN endpoint via the
-[`request.endpoint` option][requestendpoint], you must also specify a bucket name via the [`objectProperties.bucket` option][objectpropertiesbucket].
+#### S3 Transfer Acceleration
+Amazon's [S3 Transfer Acceleration option][s3transferacceleration] is by far the easiest way to have your
+uploads to S3 go through a CDN (Amazon Cloudfront). To use this feature, simply enable it in your AWS console
+and specify `https://[bucket-name].s3-accelerate.amazonaws.com` instead of `https://[bucket-name].s3.amazonaws.com`
+for the [`request.endpoint` option][requestendpoint].
+
+#### Custom CDN
+When uploading to S3 via a CDN, you must specify the name of the bucket. This is not required when directly
+uploading to S3 or when using the Transfer Acceleration option, since Fine Uploader is able to determine the
+bucket name by examining the S3 endpoint URL. This is obviously not the case for a CDN endpoint. So, in
+addition to specifying the CDN endpoint via the [`request.endpoint` option][requestendpoint], you must also
+specify a bucket name via the [`objectProperties.bucket` option][objectpropertiesbucket].
 
 Furthermore, if you are using version 4 signatures, you _also_ must specify the hostname of the S3 bucket via the
 [`objectProperties.host` option][objectpropertieshost].
 
 Please see the documentation for these options for more details.
 
-#### Simplest Setup
+The simplest set up consists of:
+
 ```javascript
 var uploader = new qq.s3.FineUploader({
     request: {
